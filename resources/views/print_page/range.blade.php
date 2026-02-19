@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atur Halaman Cetak</title>
-    
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <style>
         * {
             font-family: 'Poppins', sans-serif;
         }
-        
+
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
@@ -49,6 +50,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -80,7 +82,7 @@
             background: #f8f9fa;
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
         }
 
         .preview-header {
@@ -319,154 +321,151 @@
         }
     </style>
 </head>
+
 <body>
 
-<div class="container">
-    <!-- Preview Card -->
-    <div class="card">
-        <div class="card-header">
-            <i class="fas fa-eye"></i>
-            Preview Dokumen
-            <span class="info-badge">
-                <i class="fas fa-file-pdf"></i> PDF
-            </span>
-        </div>
-        <div class="card-body">
-            <div class="preview-container">
-                <div class="preview-header">
-                    <i class="fas fa-file-alt"></i>
-                    <span>{{ $doc->name ?? 'Dokumen' }}</span>
-                </div>
-                <iframe 
-                    src="{{ asset('storage/'.$doc->file_path) }}" 
-                    title="Preview Dokumen">
-                </iframe>
+    <div class="container">
+        <!-- Preview Card -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-eye"></i>
+                Preview Dokumen
+                <span class="info-badge">
+                    <i class="fas fa-file-pdf"></i> PDF
+                </span>
             </div>
-            
-            <!-- File Info -->
-            <div class="file-info">
-                <i class="fas fa-info-circle"></i>
-                <span>Gunakan scroll untuk melihat dokumen secara lengkap</span>
+            <div class="card-body">
+                <div class="preview-container">
+                    <div class="preview-header">
+                        <i class="fas fa-file-alt"></i>
+                        <span>{{ $doc->name ?? 'Dokumen' }}</span>
+                    </div>
+                    <iframe
+                        src="https://docs.google.com/gview?url={{ urlencode(asset('storage/' . $doc->file_path)) }}&embedded=true"
+                        style="width:100%; height:600px;">
+                    </iframe>
+
+                </div>
+
+                <!-- File Info -->
+                <div class="file-info">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Gunakan scroll untuk melihat dokumen secara lengkap</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Print Settings Card -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-sliders-h"></i>
+                Atur Halaman Cetak
+            </div>
+            <div class="card-body">
+
+                <form action="/range/{{ $doc->id }}" method="POST">
+                    @csrf
+
+                    <!-- Page Range Section -->
+                    <div class="form-section">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>
+                                        <i class="fas fa-play"></i>
+                                        Start Page
+                                    </label>
+                                    <input type="number" name="start_page" class="form-control"
+                                        placeholder="Kosongkan jika semua" min="1">
+                                    <small class="form-text">
+                                        <i class="fas fa-info-circle"></i>
+                                        Kosongkan untuk mulai dari halaman 1
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>
+                                        <i class="fas fa-stop"></i>
+                                        End Page
+                                    </label>
+                                    <input type="number" name="end_page" class="form-control"
+                                        placeholder="Kosongkan jika semua" min="1">
+                                    <small class="form-text">
+                                        <i class="fas fa-info-circle"></i>
+                                        Kosongkan untuk sampai halaman terakhir
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Separator -->
+                    <div class="separator"></div>
+
+                    <!-- Print Type Section -->
+                    <div class="form-section">
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-print"></i>
+                                Jenis Cetak
+                            </label>
+                            <select name="print_type" class="form-control" required>
+                                <option value="bw">Hitam Putih</option>
+                                <option value="colored">Berwarna</option>
+                            </select>
+                            <small class="form-text">
+                                <i class="fas fa-paint-brush"></i>
+                                Pilih jenis cetak yang diinginkan
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-credit-card"></i>
+                        Next ke Pembayaran
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+
+                </form>
+
+                <!-- Additional Info -->
+                <div class="text-center mt-4">
+                    <small class="text-muted">
+                        <i class="fas fa-lock"></i>
+                        Data pengaturan akan disimpan dengan aman
+                    </small>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Print Settings Card -->
-    <div class="card">
-        <div class="card-header">
-            <i class="fas fa-sliders-h"></i>
-            Atur Halaman Cetak
-        </div>
-        <div class="card-body">
-            
-            <form action="/range/{{ $doc->id }}" method="POST">
-                @csrf
+    <!-- Bootstrap JS (optional, for additional features) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-                <!-- Page Range Section -->
-                <div class="form-section">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>
-                                    <i class="fas fa-play"></i>
-                                    Start Page
-                                </label>
-                                <input type="number" 
-                                       name="start_page" 
-                                       class="form-control" 
-                                       placeholder="Kosongkan jika semua"
-                                       min="1">
-                                <small class="form-text">
-                                    <i class="fas fa-info-circle"></i>
-                                    Kosongkan untuk mulai dari halaman 1
-                                </small>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>
-                                    <i class="fas fa-stop"></i>
-                                    End Page
-                                </label>
-                                <input type="number" 
-                                       name="end_page" 
-                                       class="form-control" 
-                                       placeholder="Kosongkan jika semua"
-                                       min="1">
-                                <small class="form-text">
-                                    <i class="fas fa-info-circle"></i>
-                                    Kosongkan untuk sampai halaman terakhir
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Separator -->
-                <div class="separator"></div>
-
-                <!-- Print Type Section -->
-                <div class="form-section">
-                    <div class="form-group">
-                        <label>
-                            <i class="fas fa-print"></i>
-                            Jenis Cetak
-                        </label>
-                        <select name="print_type" class="form-control" required>
-                            <option value="bw">Hitam Putih</option>
-                            <option value="colored">Berwarna</option>
-                        </select>
-                        <small class="form-text">
-                            <i class="fas fa-paint-brush"></i>
-                            Pilih jenis cetak yang diinginkan
-                        </small>
-                    </div>
-                </div>
-
-                <!-- Submit Button -->
-                <button type="submit" class="btn btn-success">
-                    <i class="fas fa-credit-card"></i>
-                    Next ke Pembayaran
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-
-            </form>
-
-            <!-- Additional Info -->
-            <div class="text-center mt-4">
-                <small class="text-muted">
-                    <i class="fas fa-lock"></i>
-                    Data pengaturan akan disimpan dengan aman
-                </small>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Bootstrap JS (optional, for additional features) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>
-    // Optional: Add smooth scroll to preview
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
+    <script>
+        // Optional: Add smooth scroll to preview
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
             });
         });
-    });
 
-    // Optional: Add input validation
-    document.querySelectorAll('input[type="number"]').forEach(input => {
-        input.addEventListener('input', function() {
-            if (this.value < 1 && this.value !== '') {
-                this.value = 1;
-            }
+        // Optional: Add input validation
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.value < 1 && this.value !== '') {
+                    this.value = 1;
+                }
+            });
         });
-    });
-</script>
+    </script>
 
 </body>
+
 </html>
