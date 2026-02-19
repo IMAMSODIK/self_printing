@@ -73,19 +73,23 @@ class PrinterApiController extends Controller
     public function updateStatus(Request $request)
     {
         $request->validate([
-            'document_id' => 'required',
-            'status' => 'required'
+            'id' => 'required'
         ]);
 
-        $doc = Document::findOrFail($request->document_id);
+        $doc = Document::find($request->id);
 
-        $doc->update([
-            'print_status' => $request->status
-        ]);
+        if (!$doc) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Document tidak ditemukan'
+            ]);
+        }
+
+        $doc->print_status = 'printed';
+        $doc->save();
 
         return response()->json([
-            'status' => true,
-            'message' => 'Status berhasil diupdate'
+            'status' => true
         ]);
     }
 }
