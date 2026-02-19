@@ -744,6 +744,7 @@ const ALLOWED_TYPES = [
 
 // File Upload Area Events
 fileUploadArea.addEventListener('click', () => {
+    e.preventDefault();
     fileInput.click();
 });
 
