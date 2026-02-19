@@ -18,7 +18,6 @@ class PaymentController extends Controller
     public function pay($id)
     {
         $doc = Document::findOrFail($id);
-        dd($doc);
 
         Config::$serverKey = config('midtrans.server_key');
         Config::$isProduction = config('midtrans.is_production');
