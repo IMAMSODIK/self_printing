@@ -212,7 +212,7 @@
             margin-left: 10px;
         }
 
-        /* File Upload Area */
+        /* File Upload Area - PERBAIKAN: Hanya satu style untuk file upload */
         .file-upload-area {
             border: 3px dashed #e2e8f0;
             border-radius: 20px;
@@ -268,6 +268,7 @@
             justify-content: center;
             gap: 15px;
             margin-top: 15px;
+            flex-wrap: wrap;
         }
 
         .format-badge {
@@ -515,12 +516,13 @@
             }
 
             .file-upload-formats {
-                flex-direction: column;
-                gap: 10px;
+                flex-direction: row;
+                justify-content: center;
             }
 
             .format-badge {
-                justify-content: center;
+                padding: 6px 12px;
+                font-size: 0.8rem;
             }
 
             .selected-file-info {
@@ -528,12 +530,8 @@
             }
 
             .file-icon {
-                width: 100%;
-                margin-bottom: 10px;
-            }
-
-            .remove-file {
-                width: 100%;
+                width: 40px;
+                height: 40px;
             }
         }
 
@@ -638,15 +636,9 @@
                         @endforeach
                     </select>
                 </div>
-                
-                <!-- Printer details (optional) -->
-                <div id="printerDetails" class="mt-2 text-muted small" style="display: none;">
-                    <i class="fas fa-map-marker-alt me-1"></i>
-                    <span id="printerLocation"></span>
-                </div>
             </div>
 
-            <!-- File Upload Area -->
+            <!-- File Upload Area - Hanya SATU area upload -->
             <div class="form-group">
                 <label class="form-label">
                     <i class="fas fa-file"></i>
@@ -738,8 +730,6 @@ const fileTypeIcon = document.getElementById('fileTypeIcon');
 const fileError = document.getElementById('fileError');
 const submitBtn = document.getElementById('submitBtn');
 const printerSelect = document.getElementById('printerSelect');
-const printerDetails = document.getElementById('printerDetails');
-const printerLocation = document.getElementById('printerLocation');
 
 // Maximum file size (10MB)
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
@@ -862,17 +852,6 @@ function hideFileError() {
 
 // Printer selection change
 printerSelect.addEventListener('change', function() {
-    const selectedOption = this.options[this.selectedIndex];
-    
-    // Show printer details if available
-    if (this.value) {
-        // You can add printer details here if available in your data
-        // printerDetails.style.display = 'block';
-        // printerLocation.textContent = 'Location info here';
-    } else {
-        printerDetails.style.display = 'none';
-    }
-    
     validateForm();
 });
 
@@ -894,8 +873,6 @@ document.getElementById('uploadForm').addEventListener('submit', function(e) {
     // Add loading state
     submitBtn.classList.add('loading');
     submitBtn.innerHTML = '<i class="fas fa-spinner"></i> Memproses... <i class="fas fa-chevron-right"></i>';
-    
-    // You can add additional validation here if needed
 });
 
 // Prevent form resubmission on page refresh
@@ -903,59 +880,8 @@ if (window.history.replaceState) {
     window.history.replaceState(null, null, window.location.href);
 }
 
-// Add keyboard shortcut (Ctrl+V) for paste
-document.addEventListener('keydown', function(e) {
-    if (e.ctrlKey && e.key === 'v') {
-        e.preventDefault();
-        navigator.clipboard.read().then(clipboardItems => {
-            for (let item of clipboardItems) {
-                if (item.types.includes('Files')) {
-                    item.getType('*/*').then(file => {
-                        // Handle pasted file
-                        const newFile = new File([file], 'pasted-file.' + file.type.split('/')[1], {type: file.type});
-                        handleFileSelect(newFile);
-                    });
-                }
-            }
-        }).catch(err => {
-            console.log('Failed to read clipboard contents: ', err);
-        });
-    }
-});
-
 // Initialize validation on page load
 validateForm();
-
-// Optional: Add printer search/filter functionality
-printerSelect.addEventListener('keyup', function(e) {
-    const search = e.target.value.toLowerCase();
-    const options = this.options;
-    
-    for (let i = 1; i < options.length; i++) {
-        const text = options[i].text.toLowerCase();
-        options[i].style.display = text.includes(search) ? '' : 'none';
-    }
-});
-
-// Success notification (optional)
-function showSuccessMessage() {
-    const alert = document.createElement('div');
-    alert.className = 'alert alert-success animate__animated animate__fadeInRight';
-    alert.style.position = 'fixed';
-    alert.style.top = '20px';
-    alert.style.right = '20px';
-    alert.style.zIndex = '9999';
-    alert.style.minWidth = '300px';
-    alert.innerHTML = `
-        <i class="fas fa-check-circle me-2"></i>
-        File berhasil diupload! Mengalihkan...
-    `;
-    document.body.appendChild(alert);
-    
-    setTimeout(() => {
-        alert.remove();
-    }, 3000);
-}
 </script>
 
 <!-- Bootstrap JS Bundle -->
