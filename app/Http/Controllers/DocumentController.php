@@ -13,7 +13,7 @@ class DocumentController extends Controller
     public function uploadForm()
     {
         $printers = PrinterBox::all();
-        return view('upload', compact('printers'));
+        return view('print_page.upload', compact('printers'));
     }
 
     public function upload(Request $request)
@@ -33,7 +33,7 @@ class DocumentController extends Controller
     public function rangeForm($id)
     {
         $doc = Document::findOrFail($id);
-        return view('range',compact('doc'));
+        return view('print_page.range',compact('doc'));
     }
 
     public function setRange(Request $request,$id)

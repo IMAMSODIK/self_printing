@@ -12,7 +12,7 @@ class PaymentController extends Controller
     public function paymentForm($id)
     {
         $doc = Document::findOrFail($id);
-        return view('payment', compact('doc'));
+        return view('print_page.payment', compact('doc'));
     }
 
     public function pay($id)
