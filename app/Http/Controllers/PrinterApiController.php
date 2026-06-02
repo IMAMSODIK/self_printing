@@ -73,7 +73,8 @@ class PrinterApiController extends Controller
     public function updateStatus(Request $request)
     {
         $request->validate([
-            'id' => 'required'
+            'id' => 'required',
+            'status' => 'required'
         ]);
 
         $doc = Document::find($request->id);
@@ -82,10 +83,10 @@ class PrinterApiController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Document tidak ditemukan'
-            ]);
+            ], 404);
         }
 
-        $doc->print_status = 'printed';
+        $doc->print_status = $request->status;
         $doc->save();
 
         return response()->json([

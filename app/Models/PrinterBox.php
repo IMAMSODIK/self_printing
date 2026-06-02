@@ -9,4 +9,9 @@ class PrinterBox extends Model
 {
     /** @use HasFactory<\Database\Factories\PrinterBoxFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'name','printer_code','pin',
+        'colored_price','black_price'
+    ];
 }
